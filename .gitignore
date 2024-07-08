@@ -1,0 +1,9 @@
+.kconfig
+Kconfig
+*.o
+*.wo
+*.a
+*.dep
+.built
+.depend
+*.a.lock
