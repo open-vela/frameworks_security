@@ -1,0 +1,50 @@
+############################################################################
+#
+# Copyright (C) 2022-2024 Xiaomi Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+config CA_COMSST_API
+	bool "use ca comsst api"
+	default n
+	---help---
+		"Use ca comsst api"
+
+if CA_COMSST_API
+
+config CA_COMSST_TEST
+	bool "client application: comsst test"
+	default n
+	---help---
+		"GP CA: COMSST_TEST."
+
+if CA_COMSST_TEST
+
+config CA_COMSST_TEST_PROGNAME
+	string "Program name"
+	default "ca_comsst_test"
+	---help---
+		This is the name of the client application that will be used
+
+config CA_COMSST_TEST_PRIORITY
+	int "comsst test task priority"
+	default 100
+
+config CA_COMSST_TEST_STACKSIZE
+	int "comsst test stack size"
+	default 32768
+
+endif
+endif
