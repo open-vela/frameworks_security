@@ -18,8 +18,12 @@
 #include <nuttx/config.h>
 #include <stdio.h>
 #include <string.h>
+
+#if defined(CONFIG_LIB_TEEC)
 #include <tee_client_api.h>
 #include <teec_trace.h>
+#endif
+
 #include <triad_ta.h>
 
 #if defined(CONFIG_LIB_TEEC)
@@ -433,17 +437,14 @@ static int load_data(const char* filename, uint8_t* data, uint16_t len)
     ssize_t bytes_read;
     int fd;
 
-    DMSG("load data from %s \n", filename);
     fd = open(filename, O_RDONLY);
     if (fd == -1) {
-        DMSG("open fail ! \n");
         return -1;
     }
 
     memset(data, 0, len);
     bytes_read = read(fd, data, len);
     if (bytes_read == -1) {
-        DMSG("read fail ! \n");
         close(fd);
         return -1;
     }
@@ -457,16 +458,13 @@ static int store_data(const char* filename, uint8_t* data, uint16_t len)
     ssize_t bytes_write;
     int fd;
 
-    DMSG("store data to %s \n", filename);
     fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
     if (fd == -1) {
-        DMSG("open fail ! \n");
         return -1;
     }
 
     bytes_write = write(fd, data, len);
     if (bytes_write < -1) {
-        DMSG("write fail ! \n");
         close(fd);
         return -1;
     }
@@ -478,28 +476,24 @@ static int store_data(const char* filename, uint8_t* data, uint16_t len)
 int triad_store_did(uint8_t* did, uint16_t len)
 {
     const char* filename = "/data/triad_did.txt";
-    DMSG("triad_store_did... \n");
     return store_data(filename, did, len);
 }
 
 int triad_load_did(uint8_t* did, uint16_t len)
 {
     const char* filename = "/data/triad_did.txt";
-    DMSG("triad_load_did... \n");
     return load_data(filename, did, len);
 }
 
 int triad_store_key(uint8_t* key, uint16_t len)
 {
     const char* filename = "/data/triad_key.txt";
-    DMSG("triad_store_key... \n");
     return store_data(filename, key, len);
 }
 
 int triad_load_key(uint8_t* key, uint16_t len)
 {
     const char* filename = "/data/triad_key.txt";
-    DMSG("triad_load_key... \n");
     return load_data(filename, key, len);
 }
 #endif
