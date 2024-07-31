@@ -41,6 +41,11 @@ endif
 
 CFLAGS += -DBINARY_PREFIX='"ca_alipay"'
 
-EXPORT_FILES := $(APPDIR)/frameworks/security/include/alipay_ca_api.h
+NOEXPORTSRCS = $(ASRCS)$(CSRCS)$(CXXSRCS)$(MAINSRC)
+ifneq ($(NOEXPORTSRCS),)
+BIN := $(APPDIR)/staging/libalipay_ca.a
+endif
+
+EXPORT_FILES := ../../include/alipay_ca_api.h
 
 include $(APPDIR)/Application.mk

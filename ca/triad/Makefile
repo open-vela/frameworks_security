@@ -49,6 +49,11 @@ endif
 
 CFLAGS += -DBINARY_PREFIX='"ca_triad"'
 
-EXPORT_FILES := $(APPDIR)/frameworks/security/include/triad_ca_api.h
+NOEXPORTSRCS = $(ASRCS)$(CSRCS)$(CXXSRCS)$(MAINSRC)
+ifneq ($(NOEXPORTSRCS),)
+BIN := $(APPDIR)/staging/libtriad_ca.a
+endif
+
+EXPORT_FILES := ../../include/triad_ca_api.h
 
 include $(APPDIR)/Application.mk
