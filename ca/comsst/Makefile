@@ -41,6 +41,11 @@ endif
 
 CFLAGS += -DBINARY_PREFIX='"ca_comsst"'
 
-EXPORT_FILES := $(APPDIR)/frameworks/security/include/comsst_ca_api.h
+NOEXPORTSRCS = $(ASRCS)$(CSRCS)$(CXXSRCS)$(MAINSRC)
+ifneq ($(NOEXPORTSRCS),)
+BIN := $(APPDIR)/staging/libcomsst_ca.a
+endif
+
+EXPORT_FILES := ../../include/comsst_ca_api.h
 
 include $(APPDIR)/Application.mk
