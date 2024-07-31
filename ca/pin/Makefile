@@ -41,6 +41,11 @@ endif
 
 CFLAGS += -DBINARY_PREFIX='"ca_pin"'
 
-EXPORT_FILES := $(APPDIR)/frameworks/security/include/pin_ca_api.h
+NOEXPORTSRCS = $(ASRCS)$(CSRCS)$(CXXSRCS)$(MAINSRC)
+ifneq ($(NOEXPORTSRCS),)
+BIN := $(APPDIR)/staging/libpin_ca.a
+endif
+
+EXPORT_FILES := ../../include/pin_ca_api.h
 
 include $(APPDIR)/Application.mk
