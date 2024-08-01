@@ -20,6 +20,18 @@
 
 #include <pin_ca_api.h>
 
+static void usage(void)
+{
+    printf("usage:\n"
+           "\tca_pin_test check is_deletable\n"
+           "\tca_pin_test delete is_deletable\n"
+           "\tca_pin_test store is_deletable pin\n"
+           "\tca_pin_test verify is_deletable pin\n"
+           "\tca_pin_test change is_deletable old_pin new_pin\n"
+           "\tca_pin_test hash is_deletable\n"
+           "\tExample: ca_pin_test store 0 123456\n");
+}
+
 int main(int argc, FAR char* argv[])
 {
     /*
@@ -30,17 +42,13 @@ int main(int argc, FAR char* argv[])
      * argv[4] : new PIN when change
      */
 
-    bool is_deletable;
-
     if (argc != 3 && argc != 4 && argc != 5) {
+        printf("Invalid argument number\n");
+        usage();
         return -1;
     }
 
-    if (atoi(argv[2]) == 0) {
-        is_deletable = false;
-    } else {
-        is_deletable = true;
-    }
+    bool is_deletable = atoi(argv[2]) == 1;
 
     if (strcmp(argv[1], "store") == 0 && argc == 4) {
         char* buff = argv[3];
@@ -49,18 +57,14 @@ int main(int argc, FAR char* argv[])
         } else {
             printf("store failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "verify") == 0 && argc == 4) {
+    } else if (strcmp(argv[1], "verify") == 0 && argc == 4) {
         char* buff = argv[3];
         if (pin_verify(is_deletable, (uint8_t*)buff, strlen((const char*)buff)) == 0) {
             printf("verify successfully.\n");
         } else {
             printf("verify failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "change") == 0 && argc == 5) {
+    } else if (strcmp(argv[1], "change") == 0 && argc == 5) {
         char* old = argv[3];
         char* new = argv[4];
         if (pin_change(is_deletable, (uint8_t*)old, strlen((const char*)old),
@@ -70,9 +74,7 @@ int main(int argc, FAR char* argv[])
         } else {
             printf("change failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "hash") == 0 && argc == 3) {
+    } else if (strcmp(argv[1], "hash") == 0 && argc == 3) {
         uint8_t sha256[32];
         if (pin_getsha256(is_deletable, sha256, 32) == 0) {
             printf("hash successfully.\n");
@@ -83,22 +85,22 @@ int main(int argc, FAR char* argv[])
         } else {
             printf("hash failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "check") == 0 && argc == 3) {
+    } else if (strcmp(argv[1], "check") == 0 && argc == 3) {
         if (pin_is_exist(is_deletable) == true) {
             printf("pin is existed.\n");
         } else {
             printf("pin is not existed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "delete") == 0 && argc == 3) {
+    } else if (strcmp(argv[1], "delete") == 0 && argc == 3) {
         if (pin_delete(is_deletable) == 0) {
             printf("delete successfully.\n");
         } else {
             printf("delete failed.\n");
         }
+    } else {
+        printf("Unrecognized option: %s\n", argv[1]);
+        usage();
+        return -1;
     }
 
     return 0;
