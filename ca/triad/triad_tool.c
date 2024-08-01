@@ -20,12 +20,19 @@
 
 #include <triad_ca_api.h>
 
+#define TRIAD_DID_SIZE 8
+#define TRIAD_KEY_SIZE 16
+#define TRIAD_HMAC_SIZE 32
+
 static void usage(void)
 {
-    printf(" \tset did <did_string> \n");
-    printf(" \tget did \n");
-    printf(" \tset key <key_string> \n");
-    printf(" \tget key \n");
+    printf("usage:\n"
+           "\tca_triad_tool set did <did_string> \n"
+           "\tca_triad_tool get did \n"
+           "\tca_triad_tool set key <key_string> \n"
+           "\tca_triad_tool get key \n"
+           "\tExample: ca_triad_tool set did 12345678\n"
+           "\tExample: ca_triad_tool set key abcdefgh12345678\n");
 }
 
 int main(int argc, char* const argv[])
@@ -34,8 +41,8 @@ int main(int argc, char* const argv[])
 
     if (argc == 3 && !strcmp("get", argv[1])) {
         if (!strcmp("did", argv[2])) {
-            uint8_t did[8] = { 0 };
-            ret = triad_load_did(did, 8);
+            uint8_t did[TRIAD_DID_SIZE] = { 0 };
+            ret = triad_load_did(did, TRIAD_DID_SIZE);
             if (!ret) {
                 char result[32];
                 printf("optee:did byte %02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x \n",
@@ -46,26 +53,25 @@ int main(int argc, char* const argv[])
                 printf("optee: get did failed !\n");
             }
         } else if (!strcmp("key", argv[2])) {
-            uint8_t key[16] = { 0 };
-            char ret_key[16] = { 0 };
+            uint8_t key[TRIAD_KEY_SIZE] = { 0 };
 
-            ret = triad_load_key(key, 16);
+            ret = triad_load_key(key, TRIAD_KEY_SIZE);
             if (!ret) {
-                for (int i = 0; i < 16; i++) {
-                    ret_key[i] = (char)key[i];
-                }
-
                 printf("optee: get key data: %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",
-                    ret_key[0], ret_key[1], ret_key[2], ret_key[3], ret_key[4],
-                    ret_key[5], ret_key[6], ret_key[7], ret_key[8], ret_key[9],
-                    ret_key[10], ret_key[11], ret_key[12], ret_key[13], ret_key[14],
-                    ret_key[15]);
+                    key[0], key[1], key[2], key[3],
+                    key[4], key[5], key[6], key[7],
+                    key[8], key[9], key[10], key[11],
+                    key[12], key[13], key[14], key[15]);
             } else {
                 printf("optee: get key failed !\n");
             }
         }
     } else if (argc == 4 && !strcmp("set", argv[1])) {
         if (!strcmp("did", argv[2])) {
+            if (strlen(argv[3]) != TRIAD_DID_SIZE) {
+                printf("did length must be %d\n", TRIAD_DID_SIZE);
+                return -1;
+            }
             char* end;
             uint64_t did_num = strtoull(argv[3], &end, 10);
             uint8_t* did_group = (uint8_t*)&did_num;
@@ -73,18 +79,22 @@ int main(int argc, char* const argv[])
             printf("optee: did byte:%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x \n",
                 did_group[0], did_group[1], did_group[2], did_group[3],
                 did_group[4], did_group[5], did_group[6], did_group[7]);
-            ret = triad_store_did((uint8_t*)&did_num, 8);
+            ret = triad_store_did(did_group, TRIAD_DID_SIZE);
             if (!ret) {
                 printf("optee: set did key success!\n");
             } else {
                 printf("optee: set did key failed!\n");
             }
         } else if (!strcmp("key", argv[2])) {
-            uint8_t key[16] = { 0 };
-            for (uint8_t i = 0; i < 16; i++) {
-                key[i] = (uint8_t)argv[3][i];
+            if (strlen(argv[3]) != TRIAD_KEY_SIZE) {
+                printf("key length must be %d\n", TRIAD_KEY_SIZE);
+                return -1;
             }
-            ret = triad_store_key(key, 16);
+            uint8_t key[TRIAD_KEY_SIZE] = { 0 };
+            for (uint8_t i = 0; i < TRIAD_KEY_SIZE; i++) {
+                key[i] = argv[3][i];
+            }
+            ret = triad_store_key(key, TRIAD_KEY_SIZE);
             if (!ret) {
                 printf("optee: set key success!\n");
             } else {
@@ -92,7 +102,7 @@ int main(int argc, char* const argv[])
             }
         }
     } else {
-        printf("wrong argc\n");
+        printf("Unrecognized option: %s\n", argv[1]);
         usage();
         return -1;
     }
