@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+#include <nuttx/clock.h>
 #include <nuttx/config.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include <nuttx/clock.h>
 
 #include <comsst_ca_api.h>
 
@@ -33,6 +33,17 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable);
 uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
     bool is_deletable);
 
+static void usage(void)
+{
+    printf("usage:\n"
+           "\tca_comsst_test check scope name is_deletable\n"
+           "\tca_comsst_test read scope name is_deletable\n"
+           "\tca_comsst_test write scope name is_deletable data\n"
+           "\tca_comsst_test delete scope name is_deletable\n"
+           "\tca_comsst_test verify scope name is_deletable data\n"
+           "\tExample: ca_comsst_test write scope name 0 test_data \n");
+}
+
 int main(int argc, FAR char* argv[])
 {
     /*
@@ -43,56 +54,44 @@ int main(int argc, FAR char* argv[])
      * argv[5] : write data(when argv[1] is write)
      */
 
-    uint8_t *scope, *name;
-    uint32_t res;
-    uint32_t elapsed;
-    clock_t start;
-    bool is_deletable;
-
-    scope = (uint8_t*)argv[2];
-    name = (uint8_t*)argv[3];
-
     if (argc != 5 && argc != 6) {
+        printf("Invalid argument number\n");
+        usage();
         return -1;
     }
 
-    if (atoi(argv[4]) == 0) {
-        is_deletable = false;
-    } else {
-        is_deletable = true;
-    }
+    uint8_t* scope = (uint8_t*)argv[2];
+    uint8_t* name = (uint8_t*)argv[3];
+    bool is_deletable = atoi(argv[4]) == 1;
 
-    start = clock();
+    uint32_t res;
+    clock_t start = clock();
 
-    if (strcmp(argv[1], "check") == 0) {
-        if (is_comsst_data_exited(scope, name, is_deletable) == true) {
+    if (argc == 5 && strcmp(argv[1], "check") != 0) {
+        res = is_comsst_data_exited(scope, name, is_deletable);
+        if (res == 0) {
             printf("item is exited.\n");
-        } else {
+        } else if (res == 0xffff0008) {
             printf("item is not exited.\n");
+        } else {
+            printf("item check fail.\n");
         }
-    }
-
-    if (strcmp(argv[1], "delete") == 0) {
+    } else if (argc == 5 && strcmp(argv[1], "delete") == 0) {
         if (comsst_data_delete(scope, name, is_deletable) == 0) {
             printf("item del successfully.\n");
         } else {
             printf("item del fail.\n");
         }
-    }
-
-    if (strcmp(argv[1], "read") == 0) {
+    } else if (argc == 5 && strcmp(argv[1], "read") == 0) {
         len = 512;
         memset(buffer, 0, 512);
-
         if (comsst_data_read(scope, name, is_deletable, buffer, &len) == 0) {
             printf("item read successfully. len = %ld\n", len);
             printf("item:%s\n", buffer);
         } else {
             printf("item read failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "write") == 0) {
+    } else if (argc == 6 && strcmp(argv[1], "write") == 0) {
         if (comsst_data_write(scope, name, is_deletable, (uint8_t*)argv[5],
                 strlen(argv[5]))
             == 0) {
@@ -100,9 +99,7 @@ int main(int argc, FAR char* argv[])
         } else {
             printf("item write failed.\n");
         }
-    }
-
-    if (strcmp(argv[1], "verify") == 0) {
+    } else if (argc == 6 && strcmp(argv[1], "verify") == 0) {
         res = comsst_data_verify(scope, name, is_deletable, (uint8_t*)argv[5],
             strlen(argv[5]));
         if (res == 0) {
@@ -112,9 +109,13 @@ int main(int argc, FAR char* argv[])
         } else {
             printf("item verify failed.\n");
         }
+    } else {
+        printf("Unrecognized option: %s\n", argv[1]);
+        usage();
+        return -1;
     }
 
-    elapsed = (uint32_t)TICK2MSEC(clock() - start);
+    uint32_t elapsed = (uint32_t)TICK2MSEC(clock() - start);
     printf("The time taken of %s operation is %ld ms.\n", argv[1], elapsed);
 
     return 0;
