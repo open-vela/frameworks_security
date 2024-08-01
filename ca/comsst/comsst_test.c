@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <nuttx/clock.h>
 
 #include <comsst_ca_api.h>
 
