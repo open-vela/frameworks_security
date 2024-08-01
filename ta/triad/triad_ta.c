@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include <triad_ta.h>
 #include <kernel/user_ta.h>
 #include <string.h>
 #include <tee_internal_api.h>
 #include <trace.h>
+#include <triad_ta.h>
 
 #define TA_OBJECT_NAME_KEY "triad_key"
 #define TA_OBJECT_NAME_DID "triad_did"
