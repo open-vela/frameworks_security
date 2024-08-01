@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include <pin_ta.h>
 #include <kernel/user_ta.h>
+#include <pin_ta.h>
 #include <string.h>
 #include <tee_internal_api.h>
 #include <trace.h>
