@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include <wxcodepay_ta.h>
 #include <kernel/user_ta.h>
 #include <string.h>
 #include <tee_internal_api.h>
 #include <trace.h>
+#include <wxcodepay_ta.h>
 
 enum {
     ITEM_0 = 0,
