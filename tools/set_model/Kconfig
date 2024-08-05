@@ -22,28 +22,32 @@ config SC_SET_MODEL
 	---help---
 		This config enable the set_model security tool, which is
 		used to get the device infomation (SN, Mac etc..) from the
-		stroage device/file system and set to kvdb.
+		storage device/file system and set to kvdb.
 
 if SC_SET_MODEL
 
 config SC_SET_MODEL_MIIO_PSM_PATH
 	string "the data path"
-	default "/data/security/"
+	default "/data/security"
 
-config SC_SET_MODEL_MIJIA_PRODUCT_NAME
+config SC_SET_MODEL_PRODUCT_NAME
 	string "product name"
 	default "86v1"
 
-config SC_SET_MODEL_MIJIA_PRODUCT_ID
-	string "mijia product id"
+config SC_SET_MODEL_PRODUCT_ID
+	string "product id"
 	default "9955"
 
-config SC_SET_MODEL_MIJIA_PRODUCT_MODEL
-	string "mijia producet model"
+config SC_SET_MODEL_PRODUCT_MARKET_NAME
+	string "product market name"
+	default "AI Speaker"
+
+config SC_SET_MODEL_PRODUCT_MODEL
+	string "product model"
 	default "xiaomi.controller.86v1"
 
-config SC_SET_MODEL_PRODUCT_XIAOAI_APP_ID
-	string "xiaoai application id"
+config SC_SET_MODEL_PRODUCT_APP_ID
+	string "application id"
 	default "909534731052254208"
 
 config SC_SET_MODEL_PRODUCT_HARDWARE
