@@ -68,12 +68,13 @@ int main(int argc, char* const argv[])
         }
     } else if (argc == 4 && !strcmp("set", argv[1])) {
         if (!strcmp("did", argv[2])) {
-            if (strlen(argv[3]) != TRIAD_DID_SIZE) {
-                printf("did length must be %d\n", TRIAD_DID_SIZE);
-                return -1;
-            }
             char* end;
             uint64_t did_num = strtoull(argv[3], &end, 10);
+            if (did_num == 0) {
+                printf("optee: did string must be begin with a non-zero number\n");
+                return -1;
+            }
+
             uint8_t* did_group = (uint8_t*)&did_num;
             printf("optee: did string:%s, did number:%" PRIu64 " \n", argv[3], did_num);
             printf("optee: did byte:%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x \n",
