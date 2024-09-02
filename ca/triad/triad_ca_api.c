@@ -47,7 +47,7 @@ int triad_store_did(uint8_t* did, uint16_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%08" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -60,7 +60,7 @@ int triad_store_did(uint8_t* did, uint16_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -73,7 +73,7 @@ int triad_store_did(uint8_t* did, uint16_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_Opensession failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -85,7 +85,7 @@ int triad_store_did(uint8_t* did, uint16_t len)
     res = TEEC_InvokeCommand(&sess, TA_TRIAD_CMD_STORE_DID, &op,
         &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -123,7 +123,7 @@ int triad_load_did(uint8_t* did, uint16_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%08" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -136,7 +136,7 @@ int triad_load_did(uint8_t* did, uint16_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -153,7 +153,7 @@ int triad_load_did(uint8_t* did, uint16_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_Opensession failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -165,7 +165,7 @@ int triad_load_did(uint8_t* did, uint16_t len)
     res = TEEC_InvokeCommand(&sess, TA_TRIAD_CMD_LOAD_DID, &op,
         &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -205,7 +205,7 @@ int triad_store_key(uint8_t* key, uint16_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%08" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -218,7 +218,7 @@ int triad_store_key(uint8_t* key, uint16_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -231,7 +231,7 @@ int triad_store_key(uint8_t* key, uint16_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_Opensession failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -243,7 +243,7 @@ int triad_store_key(uint8_t* key, uint16_t len)
     res = TEEC_InvokeCommand(&sess, TA_TRIAD_CMD_STORE_KEY, &op,
         &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -281,7 +281,7 @@ int triad_load_key(uint8_t* key, uint16_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%08" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -294,7 +294,7 @@ int triad_load_key(uint8_t* key, uint16_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -311,7 +311,7 @@ int triad_load_key(uint8_t* key, uint16_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_Opensession failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -323,7 +323,7 @@ int triad_load_key(uint8_t* key, uint16_t len)
     res = TEEC_InvokeCommand(&sess, TA_TRIAD_CMD_LOAD_KEY, &op,
         &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -364,7 +364,7 @@ int triad_get_hmac(uint8_t* input, uint16_t inlen,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%08" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -381,7 +381,7 @@ int triad_get_hmac(uint8_t* input, uint16_t inlen,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08"PRIx32"\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -400,7 +400,7 @@ int triad_get_hmac(uint8_t* input, uint16_t inlen,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_Opensession failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -412,7 +412,7 @@ int triad_get_hmac(uint8_t* input, uint16_t inlen,
 
     res = TEEC_InvokeCommand(&sess, TA_TRIAD_CMD_GET_HMAC, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08"PRIx32" origin 0x%08"PRIx32"\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%08" PRIx32 " origin 0x%08" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
