@@ -27,6 +27,7 @@
 static void usage(void)
 {
     printf("usage:\n"
+           "\tATTENTION: ca_triad_tool ONLY provision data into TEE protected storage.\n"
            "\tca_triad_tool set did <did_string> \n"
            "\tca_triad_tool get did \n"
            "\tca_triad_tool set key <key_string> \n"
