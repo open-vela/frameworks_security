@@ -65,7 +65,7 @@ int main(int argc, FAR char* argv[])
         return -1;
     }
 
-    bool store;
+    bool store = false;
     if (argc == 2) {
         if (strcmp(argv[1], "store") == 0) {
             store = true;
