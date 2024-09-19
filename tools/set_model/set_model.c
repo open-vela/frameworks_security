@@ -66,8 +66,8 @@ static void usage(void)
                      "\t\tmac_bt: <MAC_address> (length: 17 characters)\n"
                      "\t\tmiio_did: <device_id> (length: 9 characters)\n"
                      "\t\tmiio_key: <device_key> (length: 16 characters)\n"
-                     "\t\tcolor_id: <color id> (length: 1 characters)\n"
-                     "\t\tcolor_desc: <color desc> (length: 15 characters)\n"
+                     "\t\tcolor_id: <color_id> (length: 1 characters)\n"
+                     "\t\tcolor_desc: <color_desc> (length: 15 characters)\n"
                      "\t\tExample:\n"
                      "\t\tset_model set sn 55119/F3YN00102\n"
                      "\t\tset_model set mac_wifi CC:D8:43:20:C4:22\n"
@@ -135,8 +135,34 @@ static int device_info_get(void)
     return 0;
 }
 
+static bool is_key_exist(const char* path, const char* key)
+{
+    FILE* file = fopen(path, "r");
+    if (!file) {
+        syslog(LOG_ERR, "Could not open %s\n", path);
+        return false;
+    }
+
+    char line[32];
+    while (fgets(line, sizeof(line), file)) {
+        char* token = strtok(line, "=");
+        if (token && strcmp(token, key) == 0) {
+            fclose(file);
+            return true;
+        }
+    }
+
+    fclose(file);
+    return false;
+}
+
 static int device_info_set(char* argv[])
 {
+    if (is_key_exist(DEVICE_INFO_PATH, argv[2])) {
+        syslog(LOG_INFO, "Key %s already exists in %s\n", argv[2], DEVICE_INFO_PATH);
+        return 0;
+    }
+
     FILE* p = fopen(DEVICE_INFO_PATH, "a+");
     if (!p) {
         syslog(LOG_ERR, "Could not open %s\n", DEVICE_INFO_PATH);
@@ -148,8 +174,8 @@ static int device_info_set(char* argv[])
         fclose(p);
         return -1;
     }
-    fclose(p);
 
+    fclose(p);
     return 0;
 }
 
