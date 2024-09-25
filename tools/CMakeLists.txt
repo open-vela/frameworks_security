@@ -1,5 +1,5 @@
 # ##############################################################################
-# frameworks/security/CMakeLists.txt
+# frameworks/security/tools/CMakeList.txt
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more contributor
 # license agreements.  See the NOTICE file distributed with this work for
@@ -20,21 +20,4 @@
 
 nuttx_add_subdirectory()
 
-nuttx_generate_kconfig(MENUDESC "Security")
-
-# ##############################################################################
-# Include Directory
-# ##############################################################################
-
-set(EXPORT_INCDIR ${CMAKE_CURRENT_LIST_DIR}/include)
-
-# ##############################################################################
-# Global FLAG
-# ##############################################################################
-
-if(TARGET nuttx)
-  set_property(
-    TARGET nuttx
-    APPEND
-    PROPERTY NUTTX_INCLUDE_DIRECTORIES ${EXPORT_INCDIR})
-endif(TARGET nuttx)
+nuttx_generate_kconfig(MENUDESC "Security tools")

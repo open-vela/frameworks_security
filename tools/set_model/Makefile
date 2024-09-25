@@ -18,10 +18,15 @@
 
 include $(APPDIR)/Make.defs
 
+ifneq ($(CONFIG_SC_SET_MODEL_API),)
+CSRCS += set_model_api.c
+ifneq ($(CONFIG_SC_SET_MODEL_TOOL),)
 PROGNAME  = ${CONFIG_SC_SET_MODEL_PROGNAME}
 PRIORITY  = ${CONFIG_SC_SET_MODEL_PRIORITY}
 STACKSIZE = ${CONFIG_SC_SET_MODEL_STACKSIZE}
-MODULE    = ${CONFIG_SC_SET_MODEL}
+MODULE    = ${CONFIG_SC_SET_MODEL_TOOL}
 MAINSRC   = set_model.c
+endif
+endif
 
 include $(APPDIR)/Application.mk
