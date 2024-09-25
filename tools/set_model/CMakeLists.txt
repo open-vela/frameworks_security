@@ -1,5 +1,5 @@
 # ##############################################################################
-# frameworks/security/CMakeLists.txt
+# frameworks/security/tools/set_model/CMakeLists.txt
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more contributor
 # license agreements.  See the NOTICE file distributed with this work for
@@ -18,23 +18,32 @@
 #
 # ##############################################################################
 
-nuttx_add_subdirectory()
-
-nuttx_generate_kconfig(MENUDESC "Security")
-
 # ##############################################################################
-# Include Directory
+# Source files
 # ##############################################################################
 
-set(EXPORT_INCDIR ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CSRCS)
+
+if(CONFIG_SC_SET_MODEL_TOOL)
+  list(APPEND CSRCS ${CMAKE_CURRENT_LIST_DIR}/set_model.c)
+endif(CONFIG_SC_SET_MODEL_TOOL)
+
+if(CONFIG_SC_SET_MODEL_API)
+  list(APPEND CSRCS ${CMAKE_CURRENT_LIST_DIR}/set_model_api.c)
+endif(CONFIG_SC_SET_MODEL_API)
 
 # ##############################################################################
-# Global FLAG
+# Application add
 # ##############################################################################
 
-if(TARGET nuttx)
-  set_property(
-    TARGET nuttx
-    APPEND
-    PROPERTY NUTTX_INCLUDE_DIRECTORIES ${EXPORT_INCDIR})
-endif(TARGET nuttx)
+if(CONFIG_SC_SET_MODEL_TOOL)
+  nuttx_add_application(
+    NAME
+    ${CONFIG_SC_SET_MODEL_PROGNAME}
+    SRCS
+    ${CSRCS}
+    STACKSIZE
+    ${CONFIG_SC_SET_MODEL_STACKSIZE}
+    PRIORITY
+    ${CONFIG_SET_MODEL_PRIORITY})
+endif(CONFIG_SC_SET_MODEL_TOOL)

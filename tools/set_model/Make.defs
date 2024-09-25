@@ -16,6 +16,6 @@
 #
 ############################################################################
 
-ifneq ($(CONFIG_SC_SET_MODEL),)
+ifneq ($(CONFIG_SC_SET_MODEL_API),)
 CONFIGURED_APPS += $(APPDIR)/frameworks/security/tools/set_model
 endif
