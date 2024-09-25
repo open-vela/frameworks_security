@@ -40,9 +40,9 @@ static TEE_Result TA_Store_Key(uint32_t param_types __unused,
 static TEE_Result TA_Get_HMAC(uint32_t param_types __unused,
     TEE_Param params[4] __unused);
 
-/* | Object Type		| Possible Key Sizes				|
- * +----------------------------+---------------------------------------------+
- * | TEE_TYPE_HMAC_SHA256	| Between 192 and 1024 bits, multiple of 8 bits	|
+/* | Object Type           | Possible Key Sizes                            |
+ * +-----------------------+-----------------------------------------------+
+ * | TEE_TYPE_HMAC_SHA256  | Between 192 and 1024 bits, multiple of 8 bits |
  */
 #define MAX_KEY_SIZE 128
 #define MIN_KEY_SIZE 24
