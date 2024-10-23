@@ -7,3 +7,4 @@ Kconfig
 .built
 .depend
 *.a.lock
+optee_vela/
