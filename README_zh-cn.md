@@ -73,7 +73,7 @@
 
 1. comsst CA
 
-如果我们需要在Vela AP当中打开`CONFIG_CA_COMSST_API`选项.
+首先在Vela AP当中打开`CONFIG_CA_COMSST_API`选项.
 然后在当前工程当中,提供了完整的使用`comsst CA API`的测试程序:[comsst api demo](ca/comsst/comsst_test.c)
 
 2. pin CA
