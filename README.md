@@ -73,7 +73,7 @@ The specific storage location of these data can be specified by passing specific
 
 1. comsst CA
 
-If we need to turn on the `CONFIG_CA_COMSST_API` option in Vela AP.
+First, turn on the `CONFIG_CA_COMSST_API` option in Vela AP.
 Then in the current project, a complete test program for using the `comsst CA API` is provided: [comsst api demo](ca/comsst/comsst_test.c).
 
 2. pin CA
