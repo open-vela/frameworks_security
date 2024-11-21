@@ -6,14 +6,14 @@
 
 当前项目当中主要包含了 `openvela` 当中的 `TA`，`CA` 以及 `set_model` 工具的实现。
 
-其中 `CA/TA` 是基于标准的 [GP API](https://globalplatform.org/specs-library/tee-internal-core-api-specification) 来实现的，如果我们当前的设备支持 `TEE` 的话，那么我们把运行在 `TEE` 当中的 `openvela` 称为 `Vela TEE`，运行在普通环境当中的 `openvela` 称为 `Vela AP`。
+其中 `CA/TA` 是基于标准的 [GP API](https://globalplatform.org/specs-library/tee-internal-core-api-specification) 来实现的，如果我们当前的设备支持 `TEE` 的话，那么我们把运行在 `TEE` 当中的 `openvela` 称为 `openvela TEE`，运行在普通环境当中的 `openvela` 称为 `openvela AP`。
 
-其中 `CA` 是运行在 `Vela AP` 当中, `TA` 是运行在 `Vela TEE`当中的。
+其中 `CA` 是运行在 `openvela AP` 当中, `TA` 是运行在 `openvela TEE`当中的。
 在 `openvela` 当中 `CA` 和 `TA` 之间的整体通信过程如下所示:
 
 ```log
 +-------------+               +---------------+
-|[Vela AP]    |               |[Vela TEE]     |
+|[openvela AP]|               |[openvela TEE] |
 |             |               |               |
 |    CA       |               |     TA        |
 |    |        |               |     /|\       |
@@ -83,7 +83,7 @@
 
 3. triad CA
 
-    首先在 `Vela AP` 当中打开 `CONFIG_CA_TRIAD_API` 选项。
+    首先在 `openvela AP` 当中打开 `CONFIG_CA_TRIAD_API` 选项。
     然后在当前工程当中,提供了完整使用 `triad CA API` 的测试程序 [triad api demo](ca/triad/triad_test.c)
 
 ### 2 TA
