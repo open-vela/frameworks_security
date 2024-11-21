@@ -184,13 +184,13 @@ static TEE_Result Comsst_DeleteItem(uint32_t param_types __unused,
         res = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
             params[1].memref.buffer,
             params[0].value.a,
-            TEE_DATA_FLAG_ACCESS_READ,
+            TEE_DATA_FLAG_ACCESS_WRITE_META,
             &obj);
     } else {
         res = TEE_OpenPersistentObject(TEE_STORAGE_USER,
             params[1].memref.buffer,
             params[0].value.a,
-            TEE_DATA_FLAG_ACCESS_READ,
+            TEE_DATA_FLAG_ACCESS_WRITE_META,
             &obj);
     }
 

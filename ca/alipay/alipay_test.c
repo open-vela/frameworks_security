@@ -60,9 +60,9 @@ int main(int argc, FAR char* argv[])
 
     if (argc == 3 && strcmp(argv[1], "check") == 0) {
         if (is_alipay_tee_data_exited(item_name[item]) == true) {
-            printf("item is exited.\n");
+            printf("item isexisted.\n");
         } else {
-            printf("item is not exited.\n");
+            printf("item is notexisted.\n");
         }
     } else if (argc == 3 && strcmp(argv[1], "delete") == 0) {
         if (alipay_tee_data_delete(item_name[item]) == 0) {
