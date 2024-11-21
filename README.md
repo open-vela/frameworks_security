@@ -6,14 +6,14 @@
 
 The current project mainly includes the implementation of `TA`, `CA` and `set_model` tools in `openvela`.
 
-Among them, `CA/TA` is implemented based on the standard [GP API](https://globalplatform.org/specs-library/tee-internal-core-api-specification). If our current device supports `TEE`, then we call `openvela` running in `TEE` `Vela TEE`, and `openvela` running in a normal environment `Vela AP`.
+Among them, `CA/TA` is implemented based on the standard [GP API](https://globalplatform.org/specs-library/tee-internal-core-api-specification). If our current device supports `TEE`, then we call `openvela` running in `TEE` `openvela TEE`, and `openvela` running in a normal environment `openvela AP`.
 
-Among them, `CA` runs in `Vela AP`, and `TA` runs in `Vela TEE`.
+Among them, `CA` runs in `openvela AP`, and `TA` runs in `openvela TEE`.
 The overall communication process between `CA` and `TA` in `openvela` is as follows:
 
 ```log
 +-------------+ +---------------+
-|[Vela AP] | |[Vela TEE] |
+|[openvela AP] | |[openvela TEE] |
 | | | |
 | CA | | TA |
 | | | | /|\ |
@@ -88,7 +88,7 @@ The specific location where these data are saved can be specified by passing the
 
 3. triad CA
 
-    First, turn on the `CONFIG_CA_TRIAD_API` option in `Vela AP`.
+    First, turn on the `CONFIG_CA_TRIAD_API` option in `openvela AP`.
     Then, in the current project, a test program [triad api demo](ca/triad/triad_test.c) that fully uses the `triad CA API` is provided.
 
 ### 2 TA
