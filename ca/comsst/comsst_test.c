@@ -67,14 +67,12 @@ int main(int argc, FAR char* argv[])
     uint32_t res;
     clock_t start = clock();
 
-    if (argc == 5 && strcmp(argv[1], "check") != 0) {
+    if (argc == 5 && strcmp(argv[1], "check") == 0) {
         res = is_comsst_data_exited(scope, name, is_deletable);
         if (res == 0) {
-            printf("item is exited.\n");
-        } else if (res == 0xffff0008) {
-            printf("item is not exited.\n");
+            printf("item is notexisted.\n");
         } else {
-            printf("item check fail.\n");
+            printf("item isexisted\n");
         }
     } else if (argc == 5 && strcmp(argv[1], "delete") == 0) {
         if (comsst_data_delete(scope, name, is_deletable) == 0) {
@@ -105,7 +103,7 @@ int main(int argc, FAR char* argv[])
         if (res == 0) {
             printf("item verify successfully.\n");
         } else if (res == 0xffff0008) {
-            printf("item is not exited.\n");
+            printf("item is notexisted.\n");
         } else {
             printf("item verify failed.\n");
         }
