@@ -67,7 +67,7 @@ config CA_TRIAD_TOOL_PRIORITY
 
 config CA_TRIAD_TOOL_STACKSIZE
 	int "Triad test stack size"
-	default DEFAULT_TASK_STACKSIZE
+	default 4096
 endif
 
 endif
