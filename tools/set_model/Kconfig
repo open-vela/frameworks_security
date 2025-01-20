@@ -90,7 +90,7 @@ config SC_SET_MODEL_DEFAULT_COLOR_DESC_VALUE
 
 config SC_SET_MODEL_DEVICE_INFO_PATH
 	string "device info path"
-	default "/data/etc/device_info.txt"
+	default "/data/etc/device.info"
 
 config SC_SET_MODEL_PROGNAME
 	string "Program name"
