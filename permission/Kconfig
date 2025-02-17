@@ -1,0 +1,62 @@
+############################################################################
+#
+# Copyright (C) 2022-2025 Xiaomi Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+############################################################################
+
+config PERMISSION_MANAGER
+	bool "Enable permission manager"
+	default n
+	depends on UNQLITE
+
+if PERMISSION_MANAGER
+
+config PERM_NAME_LEN
+	int "length of permission name"
+	default 36
+
+config PERM_DESC_LEN
+	int "length of permission description"
+	default 32
+
+config PERM_NOTIFY
+	bool "enable report permission operation(Only for auth testing)"
+	default n
+
+config PERM_RECORD
+	bool "enable the permission operation record"
+	default y
+
+if PERM_RECORD
+
+config PERM_RECORD_FILE
+	string "file name of permission record"
+	default "perm_record.log"
+
+config PERM_RECORD_KEEP_DAYS
+	int "record the maximum days to keep"
+	default 7
+
+config PERM_RECORD_MAX_COUNT
+	int "record the maximum number of permission operations"
+	default 200
+
+config PERM_RECORD_LOG_LEN
+	int "content length of one permission record"
+	default 128
+
+endif # PERM_RECORD
+
+endif # PERMISSION_MANAGER
