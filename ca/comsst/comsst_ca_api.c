@@ -33,7 +33,7 @@ uint32_t comsst_data_read(uint8_t* scope, uint8_t* name, bool is_deletable,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_COMSST_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     uint32_t fullname_len;
 
     fullname_len = strlen((char*)scope) + strlen((char*)name);
@@ -49,7 +49,7 @@ uint32_t comsst_data_read(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -62,7 +62,7 @@ uint32_t comsst_data_read(uint8_t* scope, uint8_t* name, bool is_deletable,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -76,7 +76,7 @@ uint32_t comsst_data_read(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -89,7 +89,7 @@ uint32_t comsst_data_read(uint8_t* scope, uint8_t* name, bool is_deletable,
 
     res = TEEC_InvokeCommand(&sess, TA_COMSST_CMD_RD, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -120,7 +120,7 @@ uint32_t comsst_data_write(uint8_t* scope, uint8_t* name, bool is_deletable,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_COMSST_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     uint32_t fullname_len;
 
     fullname_len = strlen((char*)scope) + strlen((char*)name);
@@ -136,7 +136,7 @@ uint32_t comsst_data_write(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -149,7 +149,7 @@ uint32_t comsst_data_write(uint8_t* scope, uint8_t* name, bool is_deletable,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -165,7 +165,7 @@ uint32_t comsst_data_write(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -178,7 +178,7 @@ uint32_t comsst_data_write(uint8_t* scope, uint8_t* name, bool is_deletable,
 
     res = TEEC_InvokeCommand(&sess, TA_COMSST_CMD_WR, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -204,7 +204,7 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable)
     TEEC_Operation op;
     TEEC_UUID uuid = TA_COMSST_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     uint32_t fullname_len;
 
     fullname_len = strlen((char*)scope) + strlen((char*)name);
@@ -220,7 +220,7 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -233,7 +233,7 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -247,7 +247,7 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -260,7 +260,7 @@ uint32_t comsst_data_delete(uint8_t* scope, uint8_t* name, bool is_deletable)
 
     res = TEEC_InvokeCommand(&sess, TA_COMSST_CMD_DEL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -287,7 +287,7 @@ uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_COMSST_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     uint32_t fullname_len;
 
     fullname_len = strlen((char*)scope) + strlen((char*)name);
@@ -303,7 +303,7 @@ uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -316,7 +316,7 @@ uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -330,7 +330,7 @@ uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -343,7 +343,7 @@ uint32_t is_comsst_data_exited(uint8_t* scope, uint8_t* name,
 
     res = TEEC_InvokeCommand(&sess, TA_COMSST_CMD_CHK, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -373,7 +373,7 @@ uint32_t comsst_data_verify(uint8_t* scope, uint8_t* name, bool is_deletable,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_COMSST_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     uint32_t fullname_len;
 
     fullname_len = strlen((char*)scope) + strlen((char*)name);
@@ -389,7 +389,7 @@ uint32_t comsst_data_verify(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -402,7 +402,7 @@ uint32_t comsst_data_verify(uint8_t* scope, uint8_t* name, bool is_deletable,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -418,7 +418,7 @@ uint32_t comsst_data_verify(uint8_t* scope, uint8_t* name, bool is_deletable,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -431,7 +431,7 @@ uint32_t comsst_data_verify(uint8_t* scope, uint8_t* name, bool is_deletable,
 
     res = TEEC_InvokeCommand(&sess, TA_COMSST_CMD_VR, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }

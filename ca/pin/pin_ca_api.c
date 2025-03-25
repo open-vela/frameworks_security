@@ -30,7 +30,7 @@ uint32_t pin_store(bool is_deletable, uint8_t* buff, uint32_t len)
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
 
@@ -38,7 +38,7 @@ uint32_t pin_store(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -51,7 +51,7 @@ uint32_t pin_store(bool is_deletable, uint8_t* buff, uint32_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -64,7 +64,7 @@ uint32_t pin_store(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -76,7 +76,7 @@ uint32_t pin_store(bool is_deletable, uint8_t* buff, uint32_t len)
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_STORE, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -102,7 +102,7 @@ uint32_t pin_verify(bool is_deletable, uint8_t* buff, uint32_t len)
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
 
@@ -110,7 +110,7 @@ uint32_t pin_verify(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -123,7 +123,7 @@ uint32_t pin_verify(bool is_deletable, uint8_t* buff, uint32_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -136,7 +136,7 @@ uint32_t pin_verify(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -148,7 +148,7 @@ uint32_t pin_verify(bool is_deletable, uint8_t* buff, uint32_t len)
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_VERIFY, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -175,7 +175,7 @@ uint32_t pin_change(bool is_deletable, uint8_t* old, uint32_t oldlen,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
 
@@ -183,7 +183,7 @@ uint32_t pin_change(bool is_deletable, uint8_t* old, uint32_t oldlen,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -196,7 +196,7 @@ uint32_t pin_change(bool is_deletable, uint8_t* old, uint32_t oldlen,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -210,7 +210,7 @@ uint32_t pin_change(bool is_deletable, uint8_t* old, uint32_t oldlen,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -223,7 +223,7 @@ uint32_t pin_change(bool is_deletable, uint8_t* old, uint32_t oldlen,
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_CHANGE, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -249,7 +249,7 @@ uint32_t pin_getsha256(bool is_deletable, uint8_t* buff, uint32_t len)
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     if (len != 32) {
         return (uint32_t)-1;
@@ -261,7 +261,7 @@ uint32_t pin_getsha256(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -274,7 +274,7 @@ uint32_t pin_getsha256(bool is_deletable, uint8_t* buff, uint32_t len)
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
 
@@ -285,7 +285,7 @@ uint32_t pin_getsha256(bool is_deletable, uint8_t* buff, uint32_t len)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -297,7 +297,7 @@ uint32_t pin_getsha256(bool is_deletable, uint8_t* buff, uint32_t len)
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_GETSHA256, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -324,7 +324,7 @@ bool pin_is_exist(bool is_deletable)
     TEEC_Session sess;
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
 
@@ -332,7 +332,7 @@ bool pin_is_exist(bool is_deletable)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -347,7 +347,7 @@ bool pin_is_exist(bool is_deletable)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_finalize;
     }
@@ -358,7 +358,7 @@ bool pin_is_exist(bool is_deletable)
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_CHK, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -384,7 +384,7 @@ uint32_t pin_delete(bool is_deletable)
     TEEC_Session sess;
     TEEC_Operation op;
     TEEC_UUID uuid = TA_PIN_UUID;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
 
@@ -392,7 +392,7 @@ uint32_t pin_delete(bool is_deletable)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -407,7 +407,7 @@ uint32_t pin_delete(bool is_deletable)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_finalize;
     }
@@ -418,7 +418,7 @@ uint32_t pin_delete(bool is_deletable)
 
     res = TEEC_InvokeCommand(&sess, TA_PIN_CMD_DEL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }

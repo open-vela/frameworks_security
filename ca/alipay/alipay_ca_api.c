@@ -65,7 +65,7 @@ uint32_t alipay_tee_data_read(const char* item_name, uint8_t* buff,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_ALIPAY_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     int item;
 
     item = get_item(item_name);
@@ -80,7 +80,7 @@ uint32_t alipay_tee_data_read(const char* item_name, uint8_t* buff,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -93,7 +93,7 @@ uint32_t alipay_tee_data_read(const char* item_name, uint8_t* buff,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -105,7 +105,7 @@ uint32_t alipay_tee_data_read(const char* item_name, uint8_t* buff,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -117,7 +117,7 @@ uint32_t alipay_tee_data_read(const char* item_name, uint8_t* buff,
 
     res = TEEC_InvokeCommand(&sess, TA_ALIPAY_CMD_RD, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -148,7 +148,7 @@ uint32_t alipay_tee_data_write(const char* item_name, const uint8_t* buf,
     TEEC_Operation op;
     TEEC_UUID uuid = TA_ALIPAY_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     int item;
 
     item = get_item(item_name);
@@ -163,7 +163,7 @@ uint32_t alipay_tee_data_write(const char* item_name, const uint8_t* buf,
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -176,7 +176,7 @@ uint32_t alipay_tee_data_write(const char* item_name, const uint8_t* buf,
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit_finalize;
     }
     memcpy(io_shm.buffer, buf, io_shm.size);
@@ -188,7 +188,7 @@ uint32_t alipay_tee_data_write(const char* item_name, const uint8_t* buf,
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_free_mem;
     }
@@ -200,7 +200,7 @@ uint32_t alipay_tee_data_write(const char* item_name, const uint8_t* buf,
 
     res = TEEC_InvokeCommand(&sess, TA_ALIPAY_CMD_WR, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -225,7 +225,7 @@ uint32_t alipay_tee_data_delete(const char* item_name)
     TEEC_Session sess;
     TEEC_Operation op;
     TEEC_UUID uuid = TA_ALIPAY_UUID;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     int item;
 
     item = get_item(item_name);
@@ -240,7 +240,7 @@ uint32_t alipay_tee_data_delete(const char* item_name)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -255,7 +255,7 @@ uint32_t alipay_tee_data_delete(const char* item_name)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_finalize;
     }
@@ -266,7 +266,7 @@ uint32_t alipay_tee_data_delete(const char* item_name)
 
     res = TEEC_InvokeCommand(&sess, TA_ALIPAY_CMD_DEL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
@@ -288,7 +288,7 @@ bool is_alipay_tee_data_exited(const char* item_name)
     TEEC_Session sess;
     TEEC_Operation op;
     TEEC_UUID uuid = TA_ALIPAY_UUID;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
     int item;
 
     item = get_item(item_name);
@@ -303,7 +303,7 @@ bool is_alipay_tee_data_exited(const char* item_name)
     res = TEEC_InitializeContext(NULL, &ctx);
 
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
 
@@ -318,7 +318,7 @@ bool is_alipay_tee_data_exited(const char* item_name)
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_finalize;
     }
@@ -329,7 +329,7 @@ bool is_alipay_tee_data_exited(const char* item_name)
 
     res = TEEC_InvokeCommand(&sess, TA_ALIPAY_CMD_CHK, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n",
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n",
             res, err_origin);
         goto exit_close_session;
     }
