@@ -84,7 +84,7 @@ int main(int argc, FAR char* argv[])
         len = 512;
         memset(buffer, 0, 512);
         if (comsst_data_read(scope, name, is_deletable, buffer, &len) == 0) {
-            printf("item read successfully. len = %ld\n", len);
+            printf("item read successfully. len = %" PRIu32 "\n", len);
             printf("item:%s\n", buffer);
         } else {
             printf("item read failed.\n");
@@ -114,7 +114,7 @@ int main(int argc, FAR char* argv[])
     }
 
     uint32_t elapsed = (uint32_t)TICK2MSEC(clock() - start);
-    printf("The time taken of %s operation is %ld ms.\n", argv[1], elapsed);
+    printf("The time taken of %s operation is %" PRIu32 " ms.\n", argv[1], elapsed);
 
     return 0;
 }

@@ -42,13 +42,13 @@ int main(int argc, FAR char* argv[])
     TEEC_Operation op;
     TEEC_UUID uuid = TA_HELLO_WORLD_UUID;
     TEEC_SharedMemory io_shm;
-    uint32_t err_origin;
+    TEEC_Result err_origin;
 
     /* Initialize a context connecting us to the TEE */
     DMSG("TEEC_InitializeContext...\n");
     res = TEEC_InitializeContext(NULL, &ctx);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InitializeContext failed with code 0x%08lx\n", res);
+        EMSG("TEEC_InitializeContext failed with code 0x%" PRIx32 "\n", res);
         return 0;
     }
 
@@ -60,7 +60,7 @@ int main(int argc, FAR char* argv[])
     DMSG("TEEC_AllocateSharedMemory...\n");
     res = TEEC_AllocateSharedMemory(&ctx, &io_shm);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_AllocateSharedMemory failed with code 0x%08lx\n", res);
+        EMSG("TEEC_AllocateSharedMemory failed with code 0x%" PRIx32 "\n", res);
         goto exit;
     }
     memset(io_shm.buffer, 0, io_shm.size);
@@ -79,7 +79,7 @@ int main(int argc, FAR char* argv[])
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
         TEEC_LOGIN_PUBLIC, NULL, &op, &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_Opensession failed with code 0x%08lx origin 0x%08lx\n", res, err_origin);
+        EMSG("TEEC_Opensession failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n", res, err_origin);
         goto clean_exit;
     }
     if (op.params[0].memref.size > 0) {
@@ -112,7 +112,7 @@ int main(int argc, FAR char* argv[])
     res = TEEC_InvokeCommand(&sess, TA_HELLO_WORLD_CMD_INC_VALUE, &op,
         &err_origin);
     if (res != TEEC_SUCCESS) {
-        EMSG("TEEC_InvokeCommand failed with code 0x%08lx origin 0x%08lx\n", res, err_origin);
+        EMSG("TEEC_InvokeCommand failed with code 0x%" PRIx32 " origin 0x%" PRIx32 "\n", res, err_origin);
         goto clean_exit;
     }
     DMSG("TA incremented value to 0x%08" PRIx32 "\n", op.params[0].value.a);
