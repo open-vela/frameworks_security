@@ -416,4 +416,4 @@ struct user_ta_head triad_user_ta_head = {
     .invoke_command_entry_point = TRIAD_TA_InvokeCommandEntryPoint
 };
 
-struct user_ta_head* user_ta = &triad_user_ta_head;
+__attribute__((visibility("default"))) struct user_ta_head* user_ta = &triad_user_ta_head;

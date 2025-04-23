@@ -416,4 +416,4 @@ struct user_ta_head hello_world_user_ta_head = {
     .invoke_command_entry_point = Hello_World_TA_InvokeCommandEntryPoint
 };
 
-struct user_ta_head* user_ta = &hello_world_user_ta_head;
+__attribute__((visibility("default"))) struct user_ta_head* user_ta = &hello_world_user_ta_head;

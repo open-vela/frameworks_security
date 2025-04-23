@@ -44,32 +44,33 @@ if(CONFIG_TA_PIN)
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
 
-  wasm_add_application(
-    NAME
-    ta_pin
-    SRCS
-    pin_ta.c
-    STACK_SIZE
-    4096
-    WINCLUDES
-    ${INCDIR}
-    WAMR_MODE
-    ${CONFIG_OPTEE_TA_FORMAT}
-    WLDFLAGS
-    ${WLDFLAGS}
-    WCFLAGS
-    ${CFLAGS}
-    INSTALL_NAME
-    etc/ta/EE571882BE621355ADAB1B7F23DEFAA6)
+  if(CONFIG_USER_TA_WASM)
+    wasm_add_application(
+      NAME
+      ta_pin
+      SRCS
+      pin_ta.c
+      STACK_SIZE
+      4096
+      WINCLUDES
+      ${INCDIR}
+      WAMR_MODE
+      ${CONFIG_OPTEE_TA_FORMAT}
+      WLDFLAGS
+      ${WLDFLAGS}
+      WCFLAGS
+      ${CFLAGS}
+      INSTALL_NAME
+      etc/ta/EE571882BE621355ADAB1B7F23DEFAA6)
 
-  wasm_add_library(
-    NAME
-    ta_frameworks
-    SRCS
-    ${APPDIR}/frameworks/security/optee_vela/wasm/wasm_ta_framework.c
-    WINCLUDES
-    ${INCDIR}
-    WCFLAGS
-    ${CFLAGS})
-
+    wasm_add_library(
+      NAME
+      ta_frameworks
+      SRCS
+      ${APPDIR}/frameworks/security/optee_vela/wasm/wasm_ta_framework.c
+      WINCLUDES
+      ${INCDIR}
+      WCFLAGS
+      ${CFLAGS})
+  endif()
 endif()

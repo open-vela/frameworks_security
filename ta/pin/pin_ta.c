@@ -517,4 +517,4 @@ struct user_ta_head pin_user_ta_head = {
     .invoke_command_entry_point = PIN_TA_InvokeCommandEntryPoint
 };
 
-struct user_ta_head* user_ta = &pin_user_ta_head;
+__attribute__((visibility("default"))) struct user_ta_head* user_ta = &pin_user_ta_head;

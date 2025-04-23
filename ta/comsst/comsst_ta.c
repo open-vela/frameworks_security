@@ -386,4 +386,4 @@ struct user_ta_head comsst_user_ta_head = {
     .invoke_command_entry_point = COMSST_TA_InvokeCommandEntryPoint
 };
 
-struct user_ta_head* user_ta = &comsst_user_ta_head;
+__attribute__((visibility("default"))) struct user_ta_head* user_ta = &comsst_user_ta_head;
