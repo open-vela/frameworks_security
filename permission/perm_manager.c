@@ -149,6 +149,7 @@ int load_perm_record(void)
 
     line = (char*)malloc(CONFIG_PERM_RECORD_LOG_LEN);
     if (line == NULL) {
+        fclose(file);
         return PERM_ERROR_GENERIC_ERROR;
     }
 
@@ -161,7 +162,7 @@ int load_perm_record(void)
         }
 
         size_t rest;
-        memset(log, 0, sizeof(permission_record));
+        memset(log, 0, sizeof(struct permlog));
         if (sscanf(line, "%llu-%[^-]%n", &log->record.recordtime, log->record.pkgname, &rest) == 2) {
             strcpy(log->record.permname, line + rest + 1);
             log->record.permname[strlen(log->record.permname) - 1] = '\0';
