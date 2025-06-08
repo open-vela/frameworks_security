@@ -44,43 +44,23 @@ if(CONFIG_TA_ALIPAY)
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
 
-  if(CONFIG_ARCH_SIM)
-    wasm_add_application(
-      NAME
-      ta_alipay
-      SRCS
-      alipay_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      WASM
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/F1490647578C565BA2C321FD51DC6791)
-  else()
-    wasm_add_application(
-      NAME
-      ta_alipay
-      SRCS
-      alipay_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      XIP
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/F1490647578C565BA2C321FD51DC6791)
-  endif()
+  wasm_add_application(
+    NAME
+    ta_alipay
+    SRCS
+    alipay_ta.c
+    STACK_SIZE
+    4096
+    WINCLUDES
+    ${INCDIR}
+    WAMR_MODE
+    ${CONFIG_OPTEE_TA_FORMAT}
+    WLDFLAGS
+    ${WLDFLAGS}
+    WCFLAGS
+    ${CFLAGS}
+    INSTALL_NAME
+    etc/ta/F1490647578C565BA2C321FD51DC6791)
 
   wasm_add_library(
     NAME

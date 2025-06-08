@@ -44,43 +44,23 @@ if(CONFIG_TA_WXCODEPAY)
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
 
-  if(CONFIG_ARCH_SIM)
-    wasm_add_application(
-      NAME
-      ta_wxcodepay
-      SRCS
-      wxcodepay_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      WASM
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/4EBA9EA8ACF42751AD93A5A4F03E1A67)
-  else()
-    wasm_add_application(
-      NAME
-      ta_wxcodepay
-      SRCS
-      wxcodepay_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      XIP
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/4EBA9EA8ACF42751AD93A5A4F03E1A67)
-  endif()
+  wasm_add_application(
+    NAME
+    ta_wxcodepay
+    SRCS
+    wxcodepay_ta.c
+    STACK_SIZE
+    4096
+    WINCLUDES
+    ${INCDIR}
+    WAMR_MODE
+    ${CONFIG_OPTEE_TA_FORMAT}
+    WLDFLAGS
+    ${WLDFLAGS}
+    WCFLAGS
+    ${CFLAGS}
+    INSTALL_NAME
+    etc/ta/4EBA9EA8ACF42751AD93A5A4F03E1A67)
 
   wasm_add_library(
     NAME
