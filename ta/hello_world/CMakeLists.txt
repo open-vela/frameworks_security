@@ -44,43 +44,23 @@ if(CONFIG_TA_HELLO_WORLD)
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
 
-  if(CONFIG_ARCH_SIM)
-    wasm_add_application(
-      NAME
-      ta_hello_world
-      SRCS
-      hello_world_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      WASM
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/00F2AA8A5024E411ABE20002A5D5C51B)
-  else()
-    wasm_add_application(
-      NAME
-      ta_hello_world
-      SRCS
-      hello_world_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      XIP
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/00F2AA8A5024E411ABE20002A5D5C51B)
-  endif()
+  wasm_add_application(
+    NAME
+    ta_hello_world
+    SRCS
+    hello_world_ta.c
+    STACK_SIZE
+    4096
+    WINCLUDES
+    ${INCDIR}
+    WAMR_MODE
+    ${CONFIG_OPTEE_TA_FORMAT}
+    WLDFLAGS
+    ${WLDFLAGS}
+    WCFLAGS
+    ${CFLAGS}
+    INSTALL_NAME
+    etc/ta/00F2AA8A5024E411ABE20002A5D5C51B)
 
   wasm_add_library(
     NAME

@@ -44,43 +44,23 @@ if(CONFIG_TA_COMSST)
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
     ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
 
-  if(CONFIG_ARCH_SIM)
-    wasm_add_application(
-      NAME
-      ta_comsst
-      SRCS
-      comsst_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      WASM
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/F617ACC99AE5405985D05056DF6BF28B)
-  else()
-    wasm_add_application(
-      NAME
-      ta_comsst
-      SRCS
-      comsst_ta.c
-      STACK_SIZE
-      4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      XIP
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
-      INSTALL_NAME
-      etc/ta/F617ACC99AE5405985D05056DF6BF28B)
-  endif()
+  wasm_add_application(
+    NAME
+    ta_comsst
+    SRCS
+    comsst_ta.c
+    STACK_SIZE
+    4096
+    WINCLUDES
+    ${INCDIR}
+    WAMR_MODE
+    ${CONFIG_OPTEE_TA_FORMAT}
+    WLDFLAGS
+    ${WLDFLAGS}
+    WCFLAGS
+    ${CFLAGS}
+    INSTALL_NAME
+    etc/ta/F617ACC99AE5405985D05056DF6BF28B)
 
   wasm_add_library(
     NAME
