@@ -15,62 +15,13 @@
 #
 
 if(CONFIG_TA_PIN)
-  set(WLDFLAGS
-      -Wl,--export=wasm_TA_CreateEntryPoint
-      -Wl,--export=wasm_TA_DestroyEntryPoint
-      -Wl,--export=wasm_TA_OpenSessionEntryPoint
-      -Wl,--export=wasm_TA_CloseSessionEntryPoint
-      -Wl,--export=wasm_TA_InvokeCommandEntryPoint)
-
-  list(APPEND CFLAGS -DCFG_NUM_THREADS=1 -DUSER_TA_WASM)
-
-  if(CONFIG_DEBUG_INFO)
-    list(APPEND CFLAGS -DTRACE_LEVEL=3)
-  elseif(CONFIG_DEBUG_WARN)
-    list(APPEND CFLAGS -DTRACE_LEVEL=2)
-  elseif(CONFIG_DEBUG_ERROR)
-    list(APPEND CFLAGS -DTRACE_LEVEL=1)
-  else()
-    list(APPEND CFLAGS -DTRACE_LEVEL=1)
-  endif()
-
-  list(
-    APPEND
-    INCDIR
-    ${APPDIR}/frameworks/security/include
-    ${APPDIR}/frameworks/security/optee_vela/include
-    ${APPDIR}/interpreters/wamr/wamr/core/iwasm/include
-    ${APPDIR}/external/optee/optee_os/optee_os/core/include
-    ${APPDIR}/external/optee/optee_os/optee_os/lib/libutee/include
-    ${APPDIR}/external/optee/optee_os/optee_os/lib/libutils/ext/include)
-
-  if(CONFIG_USER_TA_WASM)
-    wasm_add_application(
+    ta_add_application(
       NAME
       ta_pin
       SRCS
       pin_ta.c
-      STACK_SIZE
+      STACKSIZE
       4096
-      WINCLUDES
-      ${INCDIR}
-      WAMR_MODE
-      ${CONFIG_OPTEE_TA_FORMAT}
-      WLDFLAGS
-      ${WLDFLAGS}
-      WCFLAGS
-      ${CFLAGS}
       INSTALL_NAME
       etc/ta/EE571882BE621355ADAB1B7F23DEFAA6)
-
-    wasm_add_library(
-      NAME
-      ta_frameworks
-      SRCS
-      ${APPDIR}/frameworks/security/optee_vela/wasm/wasm_ta_framework.c
-      WINCLUDES
-      ${INCDIR}
-      WCFLAGS
-      ${CFLAGS})
-  endif()
 endif()

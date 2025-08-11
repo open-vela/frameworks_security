@@ -26,7 +26,8 @@ nuttx_generate_kconfig(MENUDESC "Security")
 # Include Directory
 # ##############################################################################
 
-set(EXPORT_INCDIR ${CMAKE_CURRENT_LIST_DIR}/include)
+set(EXPORT_INCDIR
+    ${NUTTX_APPS_DIR}/frameworks/security/include)
 
 # ##############################################################################
 # Global FLAG
