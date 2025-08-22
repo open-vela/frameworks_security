@@ -39,7 +39,7 @@
 #define PRODUCT_SN_LEN 15
 #define PRODUCT_MAC_WIFI_LEN 17
 #define PRODUCT_MAC_BT_LEN 17
-#define PRODUCT_MIIO_DID_LEN 9
+#define PRODUCT_MIIO_DID_LEN 10
 #define PRODUCT_MIIO_KEY_LEN 16
 #define PRODUCT_COLOR_ID_LEN 1
 #define PRODUCT_COLOR_DESC_LEN 15
@@ -97,7 +97,7 @@ int main(int argc, FAR char* argv[])
         if (strcmp(argv[2], "sn") == 0 && strlen(argv[3]) == PRODUCT_SN_LEN) {
         } else if (strcmp(argv[2], "mac_wifi") == 0 && strlen(argv[3]) == PRODUCT_MAC_WIFI_LEN) {
         } else if (strcmp(argv[2], "mac_bt") == 0 && strlen(argv[3]) == PRODUCT_MAC_BT_LEN) {
-        } else if (strcmp(argv[2], "miio_did") == 0 && strlen(argv[3]) == PRODUCT_MIIO_DID_LEN) {
+        } else if (strcmp(argv[2], "miio_did") == 0 && (strlen(argv[3]) == PRODUCT_MIIO_DID_LEN || strlen(argv[3]) == (PRODUCT_MIIO_DID_LEN - 1))) {
         } else if (strcmp(argv[2], "miio_key") == 0 && strlen(argv[3]) == PRODUCT_MIIO_KEY_LEN) {
         } else if (strcmp(argv[2], "color_id") == 0 && strlen(argv[3]) == PRODUCT_COLOR_ID_LEN) {
         } else if (strcmp(argv[2], "color_desc") == 0 && strlen(argv[3]) == PRODUCT_COLOR_DESC_LEN) {
