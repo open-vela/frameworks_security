@@ -19,6 +19,10 @@
 
 #include <stdint.h>
 
+#define CRYPT_AES_128 1
+#define CRYPT_AES_256 2
+#define CRYPT_AES_128_GCM 3
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,6 +77,46 @@ int triad_load_key(uint8_t* key, uint16_t len);
  */
 int triad_get_hmac(uint8_t* input, uint16_t inlen,
     uint8_t* output, uint16_t outlen);
+
+/**
+ * @brief Encrypt data using triad key in GCM mode
+ *
+ * @param[in]  iv       Initialization Vector (IV)
+ * @param[in]  iv_len   Length of the initialization vector
+ * @param[in]  aad      Additional Authenticated Data (AAD)
+ * @param[in]  aad_len  Length of the additional authenticated data
+ * @param[in]  input    Plaintext data to be encrypted
+ * @param[in]  length   Length of the data to be encrypted
+ * @param[out] tag      Output buffer for the authentication tag
+ * @param[in]  tag_len  Length of the authentication tag
+ * @param[out] output   Output buffer for ciphertext (should be same size as input)
+ * @return TEEC_SUCCESS on success, TEEC_ERROR_* value on failure
+ */
+int triad_gcm_encrypt(const unsigned char* iv, size_t iv_len,
+    const unsigned char* aad, size_t aad_len,
+    const unsigned char* input, size_t length,
+    unsigned char* tag, size_t tag_len,
+    unsigned char* output);
+
+/**
+ * @brief Decrypt and authenticate data encrypted with triad key in GCM mode
+ *
+ * @param[in]  iv       Initialization Vector (IV)
+ * @param[in]  iv_len   Length of the initialization vector
+ * @param[in]  aad      Additional Authenticated Data (AAD)
+ * @param[in]  aad_len  Length of the additional authenticated data
+ * @param[in]  tag      Authentication tag to verify
+ * @param[in]  tag_len  Length of the authentication tag
+ * @param[in]  input    Ciphertext data to be decrypted
+ * @param[in]  length   Length of the data to be decrypted
+ * @param[out] output   Output buffer for plaintext (should be same size as input)
+ * @return TEEC_SUCCESS on success, TEEC_ERROR_* value on failure (including authentication failure)
+ */
+int triad_gcm_decrypt(const unsigned char* iv, size_t iv_len,
+    const unsigned char* aad, size_t aad_len,
+    const unsigned char* tag, size_t tag_len,
+    const unsigned char* input, size_t length,
+    unsigned char* output);
 
 #ifdef __cplusplus
 }

@@ -17,6 +17,8 @@
 #ifndef TRIAD_TA_H_
 #define TRIAD_TA_H_
 
+#include <stdint.h>
+
 /*
  * This UUID is generated with uuidgen
  * the ITU-T UUID generator at http://www.itu.int/ITU-T/asn1/uuid.html
@@ -36,5 +38,25 @@
 #define TA_TRIAD_CMD_STORE_KEY 2
 #define TA_TRIAD_CMD_LOAD_KEY 3
 #define TA_TRIAD_CMD_GET_HMAC 4
+#define TA_TRIAD_CMD_GCM_ENCRYPT 5
+#define TA_TRIAD_CMD_GCM_DECRYPT 6
+
+#define CRYPT_AES_128 1
+#define CRYPT_AES_256 2
+#define CRYPT_AES_128_GCM 3
+#define CRYPT_AES_256_GCM 4
+
+#define IV_SIZE 16
+#define TAG_SIZE 16
+#define MAX_BUF_SIZE 512
+
+#define TRIAD_KEY_SIZE 16
+
+struct tk_auth_hdr {
+    uint8_t iv_len;
+    uint8_t tag_len;
+    uint16_t aad_len;
+    uint16_t data_len;
+};
 
 #endif

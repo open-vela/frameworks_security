@@ -53,6 +53,43 @@ static void usage(void)
            "\tca_triad_test store\n");
 }
 
+static void test_traid_gcm(void)
+{
+    unsigned char iv[12] = {
+        0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+        0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C
+    };
+
+    unsigned char aad[] = "Authentication Data";
+    unsigned char plaintext[] = "This is a test message for AES-GCM encryption!";
+    unsigned char tag[16];
+    unsigned char ciphertext[256];
+    unsigned char decrypted[256];
+    size_t plaintext_len = strlen((char*)plaintext);
+    size_t aad_len = strlen((char*)aad);
+    int res;
+
+    res = triad_gcm_encrypt(iv, sizeof(iv), aad, aad_len,
+        plaintext, plaintext_len,
+        tag, sizeof(tag), ciphertext);
+    if (res != 0) {
+        printf("triad gcm encrypt failed: %d\n", res);
+        return;
+    }
+
+    res = triad_gcm_decrypt(iv, sizeof(iv), aad, aad_len,
+        tag, sizeof(tag), ciphertext,
+        plaintext_len, decrypted);
+    if (res != 0) {
+        printf("triad gcm decrypt failed: %d\n", res);
+        return;
+    }
+
+    if (memcmp(plaintext, decrypted, plaintext_len) == 0) {
+        printf("triad gcm test success\n");
+    }
+}
+
 int main(int argc, FAR char* argv[])
 {
     /*
@@ -124,6 +161,9 @@ int main(int argc, FAR char* argv[])
         printf("triad get hmac fail\n");
         res = -1;
     }
+
+    test_traid_gcm();
+
     printf("end main\n");
 
     return res;

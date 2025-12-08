@@ -30,6 +30,12 @@ config CA_TRIAD_TEST
 	---help---
 		"GP CA: TRIAD_TEST."
 
+config CA_TRIAD_GCM_MAX_LEN
+	int "Maximum GCM data length with Triad"
+	default 300
+	---help---
+		Maximum data length (in bytes) for GCM operations.
+
 if CA_TRIAD_TEST
 
 config CA_TRIAD_TEST_PROGNAME

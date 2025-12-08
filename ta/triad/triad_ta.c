@@ -39,6 +39,10 @@ static TEE_Result TA_Store_Key(uint32_t param_types __unused,
     TEE_Param params[4] __unused);
 static TEE_Result TA_Get_HMAC(uint32_t param_types __unused,
     TEE_Param params[4] __unused);
+static TEE_Result TA_Gcm_Encrypt(uint32_t param_types __unused,
+    TEE_Param params[4] __unused);
+static TEE_Result TA_Gcm_Decrypt(uint32_t param_types __unused,
+    TEE_Param params[4] __unused);
 
 /* | Object Type           | Possible Key Sizes                            |
  * +-----------------------+-----------------------------------------------+
@@ -185,6 +189,10 @@ TEE_Result TRIAD_TA_InvokeCommandEntryPoint(void __maybe_unused* sess_ctx,
         return TA_Load_DID(param_types, params);
     case TA_TRIAD_CMD_GET_HMAC:
         return TA_Get_HMAC(param_types, params);
+    case TA_TRIAD_CMD_GCM_ENCRYPT:
+        return TA_Gcm_Encrypt(param_types, params);
+    case TA_TRIAD_CMD_GCM_DECRYPT:
+        return TA_Gcm_Decrypt(param_types, params);
     default:
         EMSG("ee962c07: 0x%08" PRIx32 "\n", cmd_id);
         return TEE_ERROR_BAD_PARAMETERS;
@@ -402,6 +410,245 @@ static TEE_Result TA_Get_HMAC(uint32_t param_types __unused,
 exit:
     DMSG("TEE_CloseObject()...\n");
     TEE_CloseObject(obj);
+    return res;
+}
+
+static TEE_Result get_triad_key(uint8_t* key, size_t key_sz)
+{
+    EMSG("perform get internal triad key %zu directly\n", key_sz);
+    TEE_Result res = TEE_ERROR_GENERIC;
+    TEE_ObjectHandle obj;
+    uint8_t name[] = TA_OBJECT_NAME_KEY;
+    size_t read_len;
+    res = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE, name, sizeof(name),
+        TEE_DATA_FLAG_ACCESS_READ, &obj);
+    if (res != TEE_SUCCESS) {
+        EMSG("c173d631:0x%08" PRIx32 "\n", res);
+        return res;
+    }
+
+    DMSG("TEE_ReadObjectData()...\n");
+    res = TEE_ReadObjectData(obj, key, key_sz, &read_len);
+    if ((res != TEE_SUCCESS) || (read_len != key_sz)) {
+        EMSG("8d4785a7:0x%08" PRIx32 ",%zu\n", res, read_len);
+    }
+
+    DMSG("TEE_CloseObject()...\n");
+    TEE_CloseObject(obj);
+    return res;
+}
+
+static TEE_Result triad_key_ae_encrypt(TEE_OperationHandle crypto_op,
+    uint8_t* in, size_t in_sz,
+    uint8_t* out, size_t* out_sz)
+{
+    TEE_Result res = TEE_ERROR_GENERIC;
+    struct tk_auth_hdr* msg = (struct tk_auth_hdr*)in;
+    size_t iv_len = msg->iv_len;
+    size_t aad_len = msg->aad_len;
+    size_t tag_len = msg->tag_len;
+    size_t data_len = msg->data_len;
+    size_t output_len = data_len + tag_len;
+    uint8_t* iv = in + sizeof(*msg);
+    uint8_t* aad = iv + iv_len;
+    uint8_t* input = aad + aad_len;
+    uint8_t* output = out;
+    uint8_t* tag = out + data_len;
+
+    res = TEE_AEInit(crypto_op, iv, iv_len, tag_len * 8, 0, 0);
+    if (res) {
+        EMSG("fail to init gcm encrypto operation\n");
+        return res;
+    }
+
+    TEE_AEUpdateAAD(crypto_op, aad, aad_len);
+    res = TEE_AEEncryptFinal(crypto_op, input, data_len, output,
+        &output_len, tag, &tag_len);
+    if (res) {
+        EMSG("fail to final gcm encrypto operation\n");
+        return TEE_ERROR_SECURITY;
+    }
+
+    *out_sz = output_len;
+    return res;
+}
+
+static TEE_Result triad_key_ae_decrypt(TEE_OperationHandle crypto_op,
+    uint8_t* in, size_t in_sz,
+    uint8_t* out, size_t* out_sz)
+{
+    TEE_Result res = TEE_ERROR_GENERIC;
+    struct tk_auth_hdr* msg = (struct tk_auth_hdr*)in;
+    size_t iv_len = msg->iv_len;
+    size_t aad_len = msg->aad_len;
+    size_t tag_len = msg->tag_len;
+    size_t data_len = msg->data_len;
+    size_t output_len = data_len;
+    uint8_t* iv = in + sizeof(*msg);
+    uint8_t* aad = iv + iv_len;
+    uint8_t* tag = aad + aad_len;
+    uint8_t* input = tag + tag_len;
+    uint8_t* output = out;
+
+    res = TEE_AEInit(crypto_op, iv, iv_len, tag_len * 8, 0, 0);
+    if (res) {
+        EMSG("fail to init gcm decrypto operation\n");
+        return res;
+    }
+
+    TEE_AEUpdateAAD(crypto_op, aad, aad_len);
+    res = TEE_AEDecryptFinal(crypto_op, input, data_len, output,
+        &output_len, tag, tag_len);
+    if (res) {
+        EMSG("fail to final gcm decrypto operation\n");
+        return TEE_ERROR_SECURITY;
+    }
+
+    *out_sz = output_len;
+    return res;
+}
+
+static TEE_Result triad_key_auth_crypt(TEE_OperationMode mode,
+    uint8_t* in, size_t in_sz,
+    uint8_t* out, size_t* out_sz)
+{
+    TEE_Result res = TEE_ERROR_GENERIC;
+    TEE_OperationHandle crypto_op = TEE_HANDLE_NULL;
+    TEE_ObjectHandle triad_key_obj = TEE_HANDLE_NULL;
+    uint8_t triad_key[TRIAD_KEY_SIZE] = {};
+    TEE_Attribute attr = {};
+
+    res = TEE_AllocateOperation(&crypto_op, TEE_ALG_AES_GCM, mode,
+        sizeof(triad_key) * 8);
+    if (res) {
+        EMSG("fail to allocate operations");
+        return res;
+    }
+
+    res = get_triad_key(triad_key, sizeof(triad_key));
+    if (res) {
+        DMSG("get_triad_key failed 0x%08" PRIx32 "\n", res);
+        goto out_op;
+    }
+
+    res = TEE_AllocateTransientObject(TEE_TYPE_AES, sizeof(triad_key) * 8,
+        &triad_key_obj);
+    if (res) {
+        DMSG("718fc92c\n");
+        goto out_op;
+    }
+
+    attr.attributeID = TEE_ATTR_SECRET_VALUE;
+    attr.content.ref.buffer = triad_key;
+    attr.content.ref.length = sizeof(triad_key);
+    res = TEE_PopulateTransientObject(triad_key_obj, &attr, 1);
+    if (res) {
+        goto out_key;
+    }
+
+    res = TEE_SetOperationKey(crypto_op, triad_key_obj);
+    if (res) {
+        goto out_key;
+    }
+
+    switch (mode) {
+    case TEE_MODE_ENCRYPT:
+        res = triad_key_ae_encrypt(crypto_op, in, in_sz, out, out_sz);
+        if (res) {
+            EMSG("triad_key_AE_encrypt failed: returned %#" PRIx32, res);
+        }
+
+        break;
+    case TEE_MODE_DECRYPT:
+        res = triad_key_ae_decrypt(crypto_op, in, in_sz, out, out_sz);
+        if (res) {
+            EMSG("triad_key_AE_decrypt failed: returned %#" PRIx32, res);
+        }
+
+        break;
+    default:
+        res = TEE_ERROR_BAD_PARAMETERS;
+        EMSG("ee962c07: 0x%08" PRIx32 "\n", mode);
+        break;
+    }
+
+out_key:
+    TEE_FreeTransientObject(triad_key_obj);
+out_op:
+    TEE_FreeOperation(crypto_op);
+    memset(triad_key, 0, sizeof(triad_key));
+    return res;
+}
+
+static TEE_Result TA_Gcm_Encrypt(uint32_t param_types __unused,
+    TEE_Param params[4] __unused)
+{
+    DMSG("Triad-TA on request to perform encrypt ->\n");
+    TEE_Result res = TEE_ERROR_GENERIC;
+    uint8_t* in_buf;
+    size_t in_len;
+    uint8_t* out_buf;
+    size_t out_len;
+    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_INPUT,
+        TEE_PARAM_TYPE_MEMREF_OUTPUT,
+        TEE_PARAM_TYPE_NONE,
+        TEE_PARAM_TYPE_NONE);
+
+    if (param_types != exp_param_types || params[0].memref.size == 0) {
+        EMSG("718fc92c\n");
+        return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    in_buf = params[0].memref.buffer;
+    in_len = params[0].memref.size;
+    if (!in_buf || in_len == 0) {
+        res = TEE_ERROR_BAD_PARAMETERS;
+        EMSG("the input buf are invalid\n");
+        goto exit;
+    }
+
+    out_buf = params[1].memref.buffer;
+    res = triad_key_auth_crypt(TEE_MODE_ENCRYPT, in_buf, in_len, out_buf, &out_len);
+    if (res != TEE_SUCCESS) {
+        EMSG("dfb849f5:0x%08" PRIx32 "\n", res);
+        goto exit;
+    }
+
+    DMSG("the encrypted content length are: %zu\n", out_len);
+
+exit:
+    return res;
+}
+
+static TEE_Result TA_Gcm_Decrypt(uint32_t param_types __unused,
+    TEE_Param params[4] __unused)
+{
+    DMSG("Triad-TA on request to perform decrypt ->\n");
+    TEE_Result res = TEE_ERROR_GENERIC;
+    uint8_t* in_buf;
+    size_t in_len;
+    size_t out_len;
+
+    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_INPUT,
+        TEE_PARAM_TYPE_MEMREF_OUTPUT,
+        TEE_PARAM_TYPE_VALUE_OUTPUT,
+        TEE_PARAM_TYPE_NONE);
+
+    if (param_types != exp_param_types || params[0].memref.size == 0) {
+        EMSG("718fc92c\n");
+        return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    in_len = params[0].memref.size;
+    in_buf = params[0].memref.buffer;
+    res = triad_key_auth_crypt(TEE_MODE_DECRYPT, in_buf, in_len,
+        (uint8_t*)params[1].memref.buffer, &out_len);
+    if (res != 0) {
+        EMSG("f2e10a84:0x%08" PRIx32 "\n", res);
+        res = TEE_ERROR_GENERIC;
+    }
+
+    params[2].value.a = out_len;
     return res;
 }
 
